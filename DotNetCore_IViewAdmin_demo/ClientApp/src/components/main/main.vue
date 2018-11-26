@@ -63,12 +63,14 @@ export default {
       minLogo,
       maxLogo,
       isFullscreen: false
+     // menuList:[]
     }
   },
   computed: {
     ...mapGetters([
       'errorCount'
     ]),
+    ...mapActions(['getMenu']),
     tagNavList () {
       return this.$store.state.app.tagNavList
     },
@@ -81,12 +83,14 @@ export default {
     cacheList () {
       return this.tagNavList.length ? this.tagNavList.filter(item => !(item.meta && item.meta.notCache)).map(item => item.name) : []
     },
-    menuList () {
-      return this.$store.getters.menuList
-    },
+     menuList () {
+       //console.log(this.$store.getters.menuList)      
+      console.log(this.$store.state.app.menuList)
+       return this.$store.state.app.menuList
+     },
     local () {
       return this.$store.state.app.local
-    },
+    }, 
     hasReadErrorPage () {
       return this.$store.state.app.hasReadErrorPage
     }

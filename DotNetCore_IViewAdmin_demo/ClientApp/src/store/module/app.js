@@ -13,6 +13,7 @@ import {
 } from '@/libs/util'
 import beforeClose from '@/router/before-close'
 import { saveErrorLogger } from '@/api/data'
+import {getMenuList} from '@/api/menus'
 import router from '@/router'
 import routers from '@/router/routers'
 import config from '@/config'
@@ -33,13 +34,22 @@ export default {
     homeRoute: getHomeRoute(routers, homeName),
     local: localRead('local'),
     errorList: [],
-    hasReadErrorPage: false
+    hasReadErrorPage: false,
+    menuList:[]
   },
   getters: {
-    menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
+   // menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
+    // menuList: (state, getters, rootState) =>{ getMenuList().then((res) => {
+    //  // this.menuList=res.data
+    //   // return getMenuByRouter(res.data, rootState.user.access)     
+    //   commit('setMenuList', res.data)
+    //  })},
     errorCount: state => state.errorList.length
   },
   mutations: {
+    setMenuList(state,list){
+      state.menuList=list
+    },
     setBreadCrumb (state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
     },
@@ -106,6 +116,13 @@ export default {
       }
       saveErrorLogger(info).then(() => {
         commit('addError', data)
+      })
+    },
+    getMenu({ commit, rootState }){
+      getMenuList().then(res=>{
+        const data = res.data
+        commit('setMenuList', data)
+       // resolve()
       })
     }
   }

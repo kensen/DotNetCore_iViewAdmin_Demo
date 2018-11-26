@@ -2,7 +2,6 @@ using App.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using VueCliMiddleware;
@@ -24,12 +23,13 @@ namespace DotNetCore_iViewAdmin_demo
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddOptions();
 
+            #region Cors ¿çÓòÅäÖÃ
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
                     builder => builder.WithOrigins("http://localhost:8080").AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials());
             });
-
+            #endregion
             services.Configure<SQLConnection>(this.Configuration.GetSection("SQLConnection"));
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -37,13 +37,7 @@ namespace DotNetCore_iViewAdmin_demo
                 configuration.RootPath = "ClientApp/build";
             });
 
-            #region ¿çÓò
-            //var urls = Configuration["AppConfig:Cores"].Split(',');
-            //services.AddCors(options =>
-            //    options.AddPolicy("AllowSameDomain",
-            //        builder => builder.WithOrigins(urls).AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin().AllowCredentials())
-            //);
-            #endregion
+          
 
         }
 

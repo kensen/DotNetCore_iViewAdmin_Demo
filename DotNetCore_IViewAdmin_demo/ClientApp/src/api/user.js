@@ -6,7 +6,7 @@ export const login = ({ userName, password }) => {
     password
   }
   return axios.request({
-    url: 'http://localhost:5000/api/LoginAccess/Login',
+    url: 'api/LoginAccess/Login',
     data,
     method: 'post'
   })
