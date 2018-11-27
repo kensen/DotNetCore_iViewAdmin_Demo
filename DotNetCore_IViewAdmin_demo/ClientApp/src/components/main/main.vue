@@ -63,14 +63,14 @@ export default {
       minLogo,
       maxLogo,
       isFullscreen: false
-     // menuList:[]
+    
     }
   },
   computed: {
     ...mapGetters([
       'errorCount'
     ]),
-    ...mapActions(['getMenu']),
+     ...mapActions(['getMenu']),
     tagNavList () {
       return this.$store.state.app.tagNavList
     },
@@ -100,7 +100,8 @@ export default {
       'setBreadCrumb',
       'setTagNavList',
       'addTag',
-      'setLocal'
+      'setLocal',
+      'setMenuList'
     ]),
     ...mapActions([
       'handleLogin'
@@ -150,6 +151,7 @@ export default {
       })
       this.setBreadCrumb(newRoute)
       this.setTagNavList(getNewTagList(this.tagNavList, newRoute))
+      
       this.$refs.sideMenu.updateOpenName(newRoute.name)
     }
   },

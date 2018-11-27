@@ -34,6 +34,7 @@ export default {
   actions: {
     // 登录
     handleLogin ({ commit }, {userName, password}) {
+      
       userName = userName.trim()
       return new Promise((resolve, reject) => {
         login({
@@ -67,6 +68,7 @@ export default {
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
+        console.log("getUser")
         try {
           getUserInfo(state.token).then(res => {
             const data = res.data

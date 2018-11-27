@@ -1,8 +1,10 @@
 import {
   getBreadCrumbList,
   setTagNavListInLocalstorage,
+  setMenuListInLocalstorage,
+  getMenuListFromLocalstorage,
   getMenuByRouter,
-  getTagNavListFromLocalstorage,
+  getTagNavListFromLocalstorage,  
   getHomeRoute,
   getNextRoute,
   routeHasExist,
@@ -48,7 +50,16 @@ export default {
   },
   mutations: {
     setMenuList(state,list){
-      state.menuList=list
+      //state.menuList=list      
+      if (list) {     
+        console.log('===setNewMenu')  
+        state.menuList = [...list]
+      } else {
+        console.log('===getMenuListFromLocalstorage')
+        state.menuList = getMenuListFromLocalstorage() || []
+       // console.log(state.menuList)
+      } 
+      setMenuListInLocalstorage(state.menuList)
     },
     setBreadCrumb (state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)
@@ -119,11 +130,22 @@ export default {
       })
     },
     getMenu({ commit, rootState }){
-      getMenuList().then(res=>{
-        const data = res.data
-        commit('setMenuList', data)
-       // resolve()
+
+      return new Promise((resolve, reject) => {     
+        try {
+          getMenuList().then(res=>{
+            const data = res.data
+            commit('setMenuList', data)
+            resolve()
+          }).catch(err => {
+            reject(err)
+          })
+        } catch (error) {
+          reject(error)
+        }
       })
+
+      
     }
   }
 }

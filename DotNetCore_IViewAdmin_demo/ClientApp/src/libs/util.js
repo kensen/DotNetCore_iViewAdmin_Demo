@@ -97,6 +97,19 @@ export const showTitle = (item, vm) => {
   } else title = (item.meta && item.meta.title) || item.name
   return title
 }
+/**
+ * @description 本地存储和获取标菜单列表
+ */
+export const setMenuListInLocalstorage = list => {
+  localStorage.menuList = JSON.stringify(list)
+}
+/**
+ * @returns 获取本地存储菜单
+ */
+export const getMenuListFromLocalstorage = () => {
+  const list = localStorage.menuList
+  return list ? JSON.parse(list) : []
+}
 
 /**
  * @description 本地存储和获取标签导航列表
