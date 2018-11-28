@@ -25,7 +25,8 @@ export default {
   methods: {
     ...mapActions([
       'handleLogin',
-      'getUserInfo',      
+      'getUserInfo', 
+      'getMenu'     
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
@@ -33,6 +34,9 @@ export default {
           this.$router.push({
             name: this.$config.homeName
           })
+
+        this.getMenu().then()
+
         })
       })
     }

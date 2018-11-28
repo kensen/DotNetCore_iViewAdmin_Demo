@@ -85,7 +85,7 @@ export default {
     },
      menuList () {
        //console.log(this.$store.getters.menuList)      
-      console.log(this.$store.state.app.menuList)
+      console.log("this.$store.state.app.menuList")
        return this.$store.state.app.menuList
      },
     local () {
@@ -101,7 +101,7 @@ export default {
       'setTagNavList',
       'addTag',
       'setLocal',
-      'setMenuList'
+      //'setMenuList'
     ]),
     ...mapActions([
       'handleLogin'
@@ -143,7 +143,7 @@ export default {
     }
   },
   watch: {
-    '$route' (newRoute) {
+    '$route' (newRoute) {      
       const { name, query, params, meta } = newRoute
       this.addTag({
         route: { name, query, params, meta },
@@ -164,6 +164,7 @@ export default {
       route: this.$store.state.app.homeRoute
     })
     this.setBreadCrumb(this.$route)
+   // console.log(this.$route)
     // 设置初始语言
     this.setLocal(this.$i18n.locale)
     // 如果当前打开页面不在标签栏中，跳到homeName页
@@ -172,6 +173,8 @@ export default {
         name: this.$config.homeName
       })
     }
+   // this.$refs.sideMenu.updateOpenName(this.$route.name)
+   // console.log(this.$refs)
   }
 }
 </script>

@@ -45,7 +45,7 @@ router.beforeEach((to, from, next) => {
         turnTo(to, user.access, next)
         var list=getMenuListFromLocalstorage()
         //setMenuListInLocalstorage(list)
-        store.dispatch("getMenu").then()
+        store.dispatch("getMenu",list).then()
       }).catch(() => {
         setToken('')
         next({

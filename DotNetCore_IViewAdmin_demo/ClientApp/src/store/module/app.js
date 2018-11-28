@@ -133,6 +133,7 @@ export default {
 
       return new Promise((resolve, reject) => {     
         try {
+          console.log("app.js getMenu")
           getMenuList().then(res=>{
             const data = res.data
             commit('setMenuList', data)

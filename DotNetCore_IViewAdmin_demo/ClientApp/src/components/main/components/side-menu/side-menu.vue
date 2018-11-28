@@ -74,13 +74,13 @@ export default {
     }
   },
   methods: {
-    handleSelect (name) {
+    handleSelect (name) {    
       this.$emit('on-select', name)
     },
     getOpenedNamesByActiveName (name) {
       return this.$route.matched.map(item => item.name).filter(item => item !== name)
     },
-    updateOpenName (name) {
+    updateOpenName (name) {        
       if (name === this.$config.homeName) this.openedNames = []
       else this.openedNames = this.getOpenedNamesByActiveName(name)
     }
@@ -91,7 +91,7 @@ export default {
     }
   },
   watch: {
-    activeName (name) {
+    activeName (name) {      
       if (this.accordion) this.openedNames = this.getOpenedNamesByActiveName(name)
       else this.openedNames = getUnion(this.openedNames, this.getOpenedNamesByActiveName(name))
     },
@@ -99,8 +99,12 @@ export default {
       this.openedNames = newNames
     },
     openedNames () {
-      this.$nextTick(() => {
-        this.$refs.menu.updateOpened()
+      this.$nextTick(() => {       
+        setTimeout(() => {              
+         this.$refs.menu.updateOpened()
+         this.$refs.menu.updateActiveName()
+        }, 100)
+        
       })
     }
   },
