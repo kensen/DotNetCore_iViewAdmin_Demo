@@ -10,6 +10,7 @@
     //},
     {
       "name": "multilevel",
+      "show": false,
       "meta": {
         "icon": "md-menu",
         "title": "多级菜单"

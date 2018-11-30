@@ -97,6 +97,30 @@ export const showTitle = (item, vm) => {
   } else title = (item.meta && item.meta.title) || item.name
   return title
 }
+
+/**
+ * @description 本地存储登录用户信息
+ */
+export const setLoginUserInLocalstorage = (user) => {
+  localStorage.loginUser = JSON.stringify(user)
+}
+/**
+ * @returns 获取本地存储已登录用户
+ */
+export const getLoginUserFromLocalstorage = () => {
+  const user = localStorage.loginUser
+  return user ? JSON.parse(user) : {}
+}
+/**
+ * 清除本地存储信息
+ */
+export const clearLocalstorage=()=>{
+  console.log("Clear")
+  localStorage.loginUser={}
+  localStorage.menuList=[]
+  localStorage.tagNaveList=[]
+}
+
 /**
  * @description 本地存储和获取标菜单列表
  */

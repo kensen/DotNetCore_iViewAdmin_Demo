@@ -1,5 +1,5 @@
 import { login, logout, getUserInfo } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, getToken,setLoginUserInLocalstorage,getLoginUserFromLocalstorage,clearLocalstorage } from '@/libs/util'
 
 export default {
   state: {
@@ -43,6 +43,8 @@ export default {
         }).then(res => {
           const data = res.data
           commit('setToken', data.token)
+          //将登录返回的实体存入本地                          
+          setLoginUserInLocalstorage(data)
           resolve()
         }).catch(err => {
           reject(err)
@@ -52,35 +54,45 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
-          resolve()
-        }).catch(err => {
-          reject(err)
-        })
-        // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        // commit('setToken', '')
-        // commit('setAccess', [])
-        // resolve()
+        // logout(state.token).then(() => {
+        //   commit('setToken', '')
+        //   commit('setAccess', [])
+        //   resolve()
+        // }).catch(err => {
+        //   reject(err)
+        // })
+        //如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
+        console.log("logout")
+        commit('setToken', '')
+        commit('setAccess', [])
+        clearLocalstorage()
+        resolve()
       })
     },
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
-      return new Promise((resolve, reject) => {
-        console.log("getUser")
+      return new Promise((resolve, reject) => {      
         try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvator', data.avator)
+          
+          const data=getLoginUserFromLocalstorage()
+           commit('setAvator', data.avator)
             commit('setUserName', data.name)
             commit('setUserId', data.user_id)
             commit('setAccess', data.access)
             commit('setHasGetInfo', true)
             resolve(data)
-          }).catch(err => {
-            reject(err)
-          })
+         
+          // getUserInfo(state.token).then(res => {
+          //   const data = res.data
+          //   commit('setAvator', data.avator)
+          //   commit('setUserName', data.name)
+          //   commit('setUserId', data.user_id)
+          //   commit('setAccess', data.access)
+          //   commit('setHasGetInfo', true)
+          //   resolve(data)
+          // }).catch(err => {
+          //   reject(err)
+          // })
         } catch (error) {
           reject(error)
         }

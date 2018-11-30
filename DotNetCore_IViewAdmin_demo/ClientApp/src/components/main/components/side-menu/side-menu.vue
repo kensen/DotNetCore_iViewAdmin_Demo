@@ -100,6 +100,7 @@ export default {
     },
     openedNames () {
       this.$nextTick(() => {       
+        //设置延迟后更新菜单打开和选中状态，否则在Chrome 浏览器中会因为重新加载菜单延迟导致刷新后没选中
         setTimeout(() => {              
          this.$refs.menu.updateOpened()
          this.$refs.menu.updateActiveName()

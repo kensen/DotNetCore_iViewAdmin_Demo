@@ -30,11 +30,12 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
+         console.log(res)
+        this.getUserInfo().then(res => {         
           this.$router.push({
             name: this.$config.homeName
           })
-
+        //获取用户菜单
         this.getMenu().then()
 
         })

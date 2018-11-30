@@ -23,7 +23,7 @@ namespace DotNetCore_iViewAdmin_demo
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddOptions();
 
-            #region Cors ¿çÓòÅäÖÃ
+            #region Cors å¼€å¯è·¨åŸŸè®¾ç½®
             services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",

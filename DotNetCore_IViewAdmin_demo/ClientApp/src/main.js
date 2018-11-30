@@ -9,7 +9,6 @@ import i18n from '@/locale'
 import config from '@/config'
 import importDirective from '@/directive'
 import installPlugin from '@/plugin'
-import cors from 'cors'
 import 'iview/dist/styles/iview.css'
 import './index.less'
 import '@/assets/icons/iconfont.css'
@@ -17,12 +16,6 @@ import '@/assets/icons/iconfont.css'
 /* eslint-disable */
 if (process.env.NODE_ENV !== 'production') require('@/mock')
 
-
-//Vue.use(cors({
-//    origin:['http://localhost:8085'],  //指定接收的地址
-//    methods:['GET','POST'],  //指定接收的请求类型
-//    alloweHeaders:['Content-Type','Authorization']  //指定header
-//}))
 
 
 Vue.use(iView, {

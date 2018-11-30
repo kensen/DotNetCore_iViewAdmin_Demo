@@ -14,7 +14,7 @@ export default {
    */
   baseUrl: {
     dev: 'http://localhost:5000/',
-    pro: 'https://produce.com'
+    pro: '' //http://localhost:8081/
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home
