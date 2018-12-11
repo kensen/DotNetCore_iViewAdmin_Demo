@@ -41,7 +41,7 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data
+          const data = res.data.loginUser
           commit('setToken', data.token)
           //将登录返回的实体存入本地                          
           setLoginUserInLocalstorage(data)

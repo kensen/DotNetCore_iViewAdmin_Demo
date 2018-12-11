@@ -1,5 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
+import { getToken} from '@/libs/util'
 // import { Spin } from 'iview'
 
 axios.defaults.withCredentials = true
@@ -24,6 +25,7 @@ class HttpRequest {
     const config = {
       baseURL: this.baseUrl,
       headers: {
+        'Authorization':'Bearer '+getToken()
         //
       }
     }

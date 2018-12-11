@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using App.Services.Dto;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,7 @@ namespace DotNetCore_iViewAdmin_demo.Controllers
         }
         // GET: api/Menu
         [HttpGet()]
+        [Authorize]
         public Array Get()
         {
 
