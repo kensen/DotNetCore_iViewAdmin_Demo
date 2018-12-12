@@ -22,9 +22,9 @@ namespace DotNetCore_iViewAdmin_demo.Controllers
         }
         // GET: api/<controller>
         [HttpGet]
-        public List<TasksDto> Get()
+        public List<BaseUsersDto> Get()
         {
-            var taskservice = new TasksService();
+            var taskservice = new BaseUsersService();
 
             List<QueryBuilder> qbList=new List<QueryBuilder>();
             qbList.Add(new QueryBuilder()

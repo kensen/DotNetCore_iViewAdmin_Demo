@@ -34,14 +34,7 @@ namespace DotNetCore_iViewAdmin_demo.Controllers
         {
             return new string[] { "value1", "value2" };
         }
-
-        // GET: api/LoginAccess/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
+      
         [HttpPost]
         [Route("Login")]
         public IActionResult PostLogin(dynamic data)
@@ -86,11 +79,11 @@ namespace DotNetCore_iViewAdmin_demo.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(JwtClaimTypes.Audience,"api"),
-                    new Claim(JwtClaimTypes.Issuer,"http://localhost:5000"),
+                    new Claim(JwtClaimTypes.Audience,_jwtsetting.Value.Audience),
+                    new Claim(JwtClaimTypes.Issuer,_jwtsetting.Value.Issuer),
                     new Claim(JwtClaimTypes.Id, user.user_id.ToString()),
                     new Claim(JwtClaimTypes.Name, user.name),
-                    new Claim(JwtClaimTypes.Expiration, expiresAt.ToString()),
+                   // new Claim(JwtClaimTypes.Expiration, expiresAt.ToString()),
                 }),
                 Expires = expiresAt,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -102,14 +95,16 @@ namespace DotNetCore_iViewAdmin_demo.Controllers
 
             return Ok(new
             {
-                access_token = tokenString,
-                token_type = "Bearer",
+                //access_token = tokenString,
+               // token_type = "Bearer",
                 loginUser=user,
-                profile = new
-                {
-                    auth_time = new DateTimeOffset(authTime).ToUnixTimeSeconds(),
-                    expires_at = new DateTimeOffset(expiresAt).ToUnixTimeSeconds()
-                }
+                RefreshToken=Guid.NewGuid(),
+                // expires_at = new DateTimeOffset(expiresAt).ToUnixTimeSeconds()
+                //profile = new
+                //{
+                //    auth_time = new DateTimeOffset(authTime).ToUnixTimeSeconds(),
+                //    expires_at = new DateTimeOffset(expiresAt).ToUnixTimeSeconds()
+                //}
             });
 
         }

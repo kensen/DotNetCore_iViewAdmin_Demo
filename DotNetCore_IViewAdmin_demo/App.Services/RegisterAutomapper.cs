@@ -20,13 +20,18 @@ namespace App.Services
 	 public static class RegisterAutomapper
     {
 		public static void Excute()
-       {		
-
-		 Mapper.Initialize(cfg => {
-		 				cfg.CreateMap<Tasks, TasksDto>();
-					cfg.CreateMap<TasksDto, Tasks>();
-	 		 });
-		}
+       {
+           Mapper.Initialize(cfg => {
+               cfg.CreateMap<BaseRole, BaseRoleDto>();
+               cfg.CreateMap<BaseRoleDto, BaseRole>();
+               cfg.CreateMap<BaseTokens, BaseTokensDto>();
+               cfg.CreateMap<BaseTokensDto, BaseTokens>();
+               cfg.CreateMap<BaseUserRoleMap, BaseUserRoleMapDto>();
+               cfg.CreateMap<BaseUserRoleMapDto, BaseUserRoleMap>();
+               cfg.CreateMap<BaseUsers, BaseUsersDto>();
+               cfg.CreateMap<BaseUsersDto, BaseUsers>();
+           });
+        }
 	}
 }
  
