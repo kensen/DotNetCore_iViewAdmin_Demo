@@ -5,7 +5,7 @@
 <template>
   <div class="login">
     <div class="login-con">
-      <Card icon="log-in" title="欢迎登录京信标签管理系统" :bordered="false">
+      <Card icon="log-in" title="欢迎登录XX管理系统" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
           <p class="login-tip">YF © 2018</p>
