@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 using System;
-using Comba.Base.Data;
+using YF.Base.Data;
 namespace App.Models
 {	
     	
@@ -30,7 +30,7 @@ namespace App.Models
 	    						/// <summary>
 		/// 
 		/// </summary>		
-		public Guid? CreateUserId { get; set; }
+		public int? CreateUserId { get; set; }
 	    						/// <summary>
 		/// 
 		/// </summary>		

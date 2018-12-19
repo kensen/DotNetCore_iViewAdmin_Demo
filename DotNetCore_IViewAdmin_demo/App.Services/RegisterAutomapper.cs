@@ -13,7 +13,7 @@ using App.Models;
 using App.Services.Dto;
 using AutoMapper;
 using System;
-using Comba.Base.Data;
+using YF.Base.Data;
 namespace App.Services
 {	
 	

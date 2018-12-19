@@ -9,7 +9,9 @@
 //------------------------------------------------------------------------------
 
 using System;
-using Comba.Base.Data;
+using YF.Base.Data;
+using Dapper;
+
 namespace App.Services.Dto
 {	
     	
@@ -46,7 +48,7 @@ namespace App.Services.Dto
 	    		/// <summary>
 		/// 
 		/// </summary>		
-		public Guid? CreateUserId { get; set; }
+		public int CreateUserId { get; set; }
 	    		/// <summary>
 		/// 
 		/// </summary>		
@@ -59,7 +61,11 @@ namespace App.Services.Dto
 		/// 预留OpenID
 		/// </summary>		
 		public string OpenId { get; set; }
-	    	
+
+        [IgnoreProperty(true)]
+        public int? RoleId { get; set; }
+
+
     }
 }
  

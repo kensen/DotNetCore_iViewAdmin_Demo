@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Comba.Base.Data;
+using YF.Base.Data;
 using App.Services.Dto;
 
 namespace App.Services

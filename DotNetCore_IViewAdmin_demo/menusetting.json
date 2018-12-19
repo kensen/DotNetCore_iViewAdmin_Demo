@@ -1,13 +1,31 @@
 {
   "menuSetting": [
-    //{
-    //  "name": "doc",
-    //  "meta": {
-    //    "title": "文档444",
-    //    "href": "https://lison16.github.io/iview-admin-doc/#/",
-    //    "icon": "ios-book"
-    //  }
-    //},
+    {
+      "name": "sysmanager",
+      "show": false,
+      "meta": {
+        "icon": "md-menu",
+        "title": "系统管理"
+      },
+      "children": [
+        {
+          "name": "usermanager",
+          "show": false,
+          "meta": {
+            "icon": "md-funnel",
+            "title": "用户管理"
+          }
+        },
+        {
+          "name": "rolemanager",
+          "show": false,
+          "meta": {
+            "icon": "md-funnel",
+            "title": "角色管理"
+          }
+        }
+      ]
+    },
     {
       "name": "multilevel",
       "show": false,
@@ -18,6 +36,7 @@
       "children": [
         {
           "name": "level_2_1",
+          "show": false,
           "meta": {
             "icon": "md-funnel",
             "title": "二级-1"
@@ -25,6 +44,7 @@
         },
         {
           "name": "level_2_2",
+          "show": false,
           "meta": {
             "access": [
               "super_admin"
@@ -45,6 +65,7 @@
         },
         {
           "name": "level_2_3",
+          "show": false,
           "meta": {
             "icon": "md-funnel",
             "title": "二级-3"
@@ -54,4 +75,3 @@
     }
   ]
 }
-

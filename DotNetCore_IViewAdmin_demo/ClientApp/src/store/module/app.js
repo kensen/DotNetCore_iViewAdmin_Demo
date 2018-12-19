@@ -133,7 +133,13 @@ export default {
 
       return new Promise((resolve, reject) => {     
         try {
-         //console.log("app.js getMenu")
+
+        var menu= getMenuListFromLocalstorage()
+          console.log(menu.length)
+        if(menu.length>0){
+          commit('setMenuList', menu)
+          resolve()
+        }else{
           getMenuList().then(res=>{
             const data = res.data
             commit('setMenuList', data)
@@ -141,6 +147,10 @@ export default {
           }).catch(err => {
             reject(err)
           })
+        }
+
+         //console.log("app.js getMenu")
+         
         } catch (error) {
           reject(error)
         }

@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Configuration;
-using Comba.Base.Data;
+using YF.Base.Data;
 using App.Models;
 using App.Repositories;
 using App.Services.Dto;

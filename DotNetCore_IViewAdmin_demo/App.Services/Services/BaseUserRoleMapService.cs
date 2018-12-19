@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Configuration;
-using Comba.Base.Data;
+using YF.Base.Data;
 using App.Models;
 using App.Repositories;
 using App.Services.Dto;
@@ -37,6 +37,12 @@ namespace App.Services
 			//cfg.CreateMap<BaseUserRoleMap, BaseUserRoleMapDto>();
 			//cfg.CreateMap<BaseUserRoleMapDto, BaseUserRoleMap>();
 			//Mapper.Initialize(cfg);
+        }
+
+        public BaseUserRoleMapService(IConnectionFactory con)
+        {
+           connection = con;
+            repository = new BaseUserRoleMapRepository(connection);
         }
 
         public bool Add(BaseUserRoleMapDto dto)

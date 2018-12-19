@@ -8,23 +8,25 @@ namespace App.Services.Dto
 {
     public class MenuDto
     {
-        public string name { get; set; }
+        public string Name { get; set; }
 
-        public string icon => meta.icon??"";
+        public string Icon => Meta.Icon??"";
 
-        public string href => meta.href ?? "";
+        public string Href => Meta.Href ?? "";
 
-        public Meta meta { get; set; }
+        public Meta Meta { get; set; }
 
-        public List<MenuDto> children { get; set; }
+        public bool Show { get; set; }
+
+        public List<MenuDto> Children { get; set; }
     }
 
     public class Meta
     {
-        public string title {get; set; }
-        public string icon { get; set; }
-        public string href { get; set; }
-        public string[] access { get; set; }
-        public bool showAlways { get; set; }
+        public string Title {get; set; }
+        public string Icon { get; set; }
+        public string Href { get; set; }
+        public string[] Access { get; set; }
+        public bool ShowAlways { get; set; }
     }
 }

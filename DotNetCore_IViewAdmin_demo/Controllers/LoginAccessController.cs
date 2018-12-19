@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using App.Services;
 using App.Services.Dto;
 using IdentityModel;
 using Microsoft.AspNetCore.Cors;
@@ -13,6 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using YF.Utility.Secutiry;
+
+
 
 
 namespace DotNetCore_iViewAdmin_demo.Controllers
@@ -23,9 +28,11 @@ namespace DotNetCore_iViewAdmin_demo.Controllers
     public class LoginAccessController : ControllerBase
     {
         private IOptions<JwtSetting> _jwtsetting;
+        private ILoginAccess _service;
         public LoginAccessController(IOptions<JwtSetting> jwtsetting)
         {
             _jwtsetting = jwtsetting;
+            _service=new LoginAccessService();
         }
 
         // GET: api/LoginAccess
@@ -38,51 +45,33 @@ namespace DotNetCore_iViewAdmin_demo.Controllers
         [HttpPost]
         [Route("Login")]
         public IActionResult PostLogin(dynamic data)
-        {
-
-            //var builder = new ConfigurationBuilder()
-            //    .AddJsonFile("appsettings.json");
-            //var configuration = builder.Build();
-
+        {          
             var userName = Convert.ToString(data.userName);
-            var password = Convert.ToString(data.password);
-            User user = null;
-            if (userName.ToString() == "super_admin" && password.ToString() == "1qaz2wsx")
+            var password = HashHelper.GetMd5(Convert.ToString(data.password));
+
+            UserInfoDto loginUser = _service.Login(userName, password);           
+            if (loginUser == null) return Unauthorized();
+
+            User user = new User()
             {
-                user= new User()
-                {
-                    name = "super_admin",
-                    user_id = 1,
-                    access = new string[] { "super_admin", "admin" },
-                    token = "super_admin",
-                    avator = "https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png"
-                };
-            }
-            else if (userName.ToString() == "admin" && password.ToString() == "123456")
-            {
-                user= new User()
-                {
-                    name = "admin",
-                    user_id = 2,
-                    access = new string[] { "admin" },
-                    token = "admin",
-                    avator = "https://avatars0.githubusercontent.com/u/20942571?s=460&v=4"
-                };
-            }
-            if (user == null) return Unauthorized();
+                name = loginUser.UserName,
+                user_id = loginUser.Id,
+                access = new []{""},
+                avator = "https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png"
+            };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtsetting.Value.SecurityKey);
             var authTime = DateTime.UtcNow;
-            var expiresAt = authTime.AddMinutes(3);
+            var expiresAt = authTime.AddHours(1);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                     new Claim(JwtClaimTypes.Audience,_jwtsetting.Value.Audience),
                     new Claim(JwtClaimTypes.Issuer,_jwtsetting.Value.Issuer),
-                    new Claim(JwtClaimTypes.Id, user.user_id.ToString()),
-                    new Claim(JwtClaimTypes.Name, user.name),
+                    new Claim(JwtClaimTypes.Id, loginUser.Id.ToString()),
+                    new Claim(JwtClaimTypes.Name, loginUser.LoginId),
                    // new Claim(JwtClaimTypes.Expiration, expiresAt.ToString()),
                 }),
                 Expires = expiresAt,

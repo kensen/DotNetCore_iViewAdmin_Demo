@@ -9,7 +9,9 @@
 //------------------------------------------------------------------------------
 
 using System;
-using Comba.Base.Data;
+using YF.Base.Data;
+using Dapper;
+
 namespace App.Services.Dto
 {	
     	
@@ -34,7 +36,7 @@ namespace App.Services.Dto
 	    		/// <summary>
 		/// 
 		/// </summary>		
-		public Guid? CreateUserId { get; set; }
+		public int? CreateUserId { get; set; }
 	    		/// <summary>
 		/// 
 		/// </summary>		
@@ -51,6 +53,8 @@ namespace App.Services.Dto
 		/// 
 		/// </summary>		
 		public DateTime? CreatedTime { get; set; }
+
+     
 	    	
     }
 }

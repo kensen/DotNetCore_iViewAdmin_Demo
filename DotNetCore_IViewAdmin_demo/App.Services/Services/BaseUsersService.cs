@@ -13,10 +13,12 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Configuration;
-using Comba.Base.Data;
+using YF.Base.Data;
 using App.Models;
 using App.Repositories;
 using App.Services.Dto;
+using YF.Utility.Message;
+using YF.Utility.Extensions;
 
 namespace App.Services
 {	
@@ -25,68 +27,212 @@ namespace App.Services
 	 public class BaseUsersService:IBaseUsers
     {
         IConnectionFactory connection = new ConnectionFactory();
-        BaseUsersRepository repository;
-
+        BaseUsersRepository _usersRepository;
+        private BaseRoleRepository _roleRepository;
+        readonly UnitOfWork _unitOfWork;
         public BaseUsersService()
         {
-            repository = new BaseUsersRepository(connection);
+            _usersRepository = new BaseUsersRepository(connection);
+            _roleRepository=new BaseRoleRepository(connection);
+            _unitOfWork =new UnitOfWork(connection);
            // Mapper.CreateMap<BaseUsers, BaseUsersDto>();
            // Mapper.CreateMap<BaseUsersDto, BaseUsers>();
 
-			//var cfg = new MapperConfigurationExpression();
-			//cfg.CreateMap<BaseUsers, BaseUsersDto>();
-			//cfg.CreateMap<BaseUsersDto, BaseUsers>();
-			//Mapper.Initialize(cfg);
+            //var cfg = new MapperConfigurationExpression();
+            //cfg.CreateMap<BaseUsers, BaseUsersDto>();
+            //cfg.CreateMap<BaseUsersDto, BaseUsers>();
+            //Mapper.Initialize(cfg);
         }
 
-        public bool Add(BaseUsersDto dto)
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public OperationResult<bool> Add(BaseUsersDto dto)
         {
             BaseUsers model = Mapper.Map<BaseUsersDto, BaseUsers>(dto);
-            return repository.Insert(model);
+            //return repository.Insert(model);
+
+            OperationResult<bool> req = new OperationResult<bool>(OperationResultType.Success);
+            _unitOfWork.Begin();
+            try
+            {
+                if (string.IsNullOrEmpty(dto.LoginId) || string.IsNullOrEmpty(dto.PassWord))
+                {
+                    req.ResultError("登陆账号或密码不能为空！");
+                    _unitOfWork.Rollback();
+                    return req;
+                }
+
+                if (GetDto(dto.LoginId) != null)
+                {
+                    req.ResultError("已存在相同的登录账号！");
+                    _unitOfWork.Rollback();
+                    return req;
+                }
+
+                var userid = _usersRepository.InsertReturnId(model);
+                if (userid == null || userid < 1)
+                {
+                    req.ResultError("新增用户出错");
+                    _unitOfWork.Rollback();
+                }
+
+                if (dto.RoleId != null)
+                {
+                    BaseUserRoleMapService RoleMapService = new BaseUserRoleMapService(connection);
+                    BaseRole role = _roleRepository.GetById(dto.RoleId.Value);
+                    if (role == null)
+                    {
+                        req.ResultError("找不到角色");
+                        _unitOfWork.Rollback();
+                        return req;
+                    }
+
+                    BaseUserRoleMapDto rolemap = new BaseUserRoleMapDto();
+                    rolemap.IsDeleted = false;
+                    rolemap.CreatedTime = DateTime.Now;
+                    rolemap.UserId = userid;
+                    rolemap.RoleId = dto.RoleId;
+                    if (!RoleMapService.Add(rolemap))
+                    {
+                        req.ResultError("关联角色出错");
+                        _unitOfWork.Rollback();
+                    }
+                }
+
+                _unitOfWork.Commit();
+                req.Data = true;
+            }
+            catch (Exception ex)
+            {
+                req.ResultError(ex.Message);
+                req.Data = false;
+                _unitOfWork.Rollback();
+            }
+            finally
+            {
+                _unitOfWork.Dispose();
+            }
+            return req;
+
         }
 
-        public bool Update(BaseUsersDto dto)
+        public OperationResult<bool> Update(BaseUsersDto dto)
         {
-           // throw new NotImplementedException();
-          //  BaseUsers model = Mapper.Map<BaseUsersDto, BaseUsers>(dto);
-            return repository.Update<BaseUsersDto>(dto);
+            // throw new NotImplementedException();
+            //  BaseUsers model = Mapper.Map<BaseUsersDto, BaseUsers>(dto);
+            OperationResult<bool> req = new OperationResult<bool>(OperationResultType.Success);
+            _unitOfWork.Begin();
+            try
+            {
+                var user = GetDto(dto.LoginId);
+                if (user != null && user.Id != dto.Id)
+                {
+                    req.ResultError("已存在相同的登录账号！");
+                    req.Data = false;
+                    _unitOfWork.Rollback();
+                    return req;
+                }
+
+                if (!_usersRepository.Update<BaseUsersDto>(dto))
+                {
+                    req.ResultError("用户数据更新失败！");
+                    req.Data = false;
+                    _unitOfWork.Rollback();
+                    return req;
+                }
+
+                StringBuilder strSql = new StringBuilder();
+                strSql.Append(@"UPDATE BaseUserRoleMap SET RoleId=@RoleId WHERE UserId=@UserId");
+
+                if (_usersRepository.Execute(strSql.ToString(),new{RoleId=dto.RoleId,UserId=dto.Id}) < 0)
+                {
+                    req.ResultError("角色关联失败！");
+                    req.Data = false;
+                    _unitOfWork.Rollback();
+                    return req;
+                }
+
+                _unitOfWork.Commit();
+                req.Data = true;
+                req.Message = "更新成功！";
+
+            }
+            catch (Exception ex)
+            {
+                req.ResultError(ex.Message);
+                req.Data = false;
+                _unitOfWork.Rollback();
+              //  return req;
+            }
+            finally
+            {
+                _unitOfWork.Dispose();
+            }
+
+            return req;
         }
 
         public bool Delete(int id)
         {
-            return repository.Delete(id);
+            return _usersRepository.Delete(id);
         }
 
         public bool Delete(string ids)
         {
-            return repository.Delete(ids);
+            return _usersRepository.Delete(ids);
         }
 
         public List<BaseUsersDto> GetAll()
         {
-          //  AutoMapper.Mapper.CreateMap<Address, AddressDto>();
-            var BaseUsersDtoList = Mapper.Map<List<BaseUsers>, List<BaseUsersDto>>(repository.GetList());
+            //  AutoMapper.Mapper.CreateMap<Address, AddressDto>();
+            //   var BaseUsersDtoList = Mapper.Map<List<BaseUsers>, List<BaseUsersDto>>(_usersRepository.GetList());
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"SELECT a.*,b.RoleId FROM dbo.BaseUsers a LEFT JOIN dbo.BaseUserRoleMap b ON a.id=b.UserId");
+            var BaseUsersDtoList = _usersRepository.Query<BaseUsersDto>(strSql.ToString()).ToList();
             return BaseUsersDtoList;
         }
 
         public List<BaseUsersDto> GetList(List<QueryBuilder> qbList)
         {
-           // throw new NotImplementedException();
-            var BaseUsersDtoList = Mapper.Map<List<BaseUsers>, List<BaseUsersDto>>(repository.GetList(qbList));
+            // throw new NotImplementedException();
+            // var BaseUsersDtoList = Mapper.Map<List<BaseUsers>, List<BaseUsersDto>>(_usersRepository.GetList(qbList));
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"SELECT a.*,b.RoleId FROM dbo.BaseUsers a LEFT JOIN dbo.BaseUserRoleMap b ON a.id=b.UserId");
+            var BaseUsersDtoList = _usersRepository.GetList<BaseUsersDto>(strSql.ToString(), qbList).ToList();
             return BaseUsersDtoList;
         }
 
         public List<BaseUsersDto> GetPageList(List<QueryBuilder> queryBuliders, SortCondition sort, int intPageSize, int intCurrentIndex, out int total)
         {
-           // throw new NotImplementedException();
-            
-            var BaseUsersDtoList = Mapper.Map<List<BaseUsers>, List<BaseUsersDto>>(repository.QueryPage(queryBuliders,sort,intPageSize,intCurrentIndex,out total));
+            // throw new NotImplementedException();
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"SELECT a.*,b.RoleId FROM dbo.BaseUsers a LEFT JOIN dbo.BaseUserRoleMap b ON a.id=b.UserId ");
+            var BaseUsersDtoList = _usersRepository.QueryPage<BaseUsersDto>("", strSql.ToString(), queryBuliders, sort,intPageSize,intCurrentIndex,out total);
             return BaseUsersDtoList;
         }
 
         public List<BaseUsersDto> GetPageList(string sql, SortCondition sort, int intPageSize, int intCurrentIndex, out int total)
         {
             throw new NotImplementedException();
+        }
+
+        public BaseUsersDto GetDto(int id)
+        {
+           StringBuilder strSql=new StringBuilder();
+            strSql.Append(@"SELECT a.*,b.RoleId FROM dbo.BaseUsers a LEFT JOIN dbo.BaseUserRoleMap b ON a.id=b.UserId
+WHERE a.Id=@Id");
+            return _usersRepository.Query<BaseUsersDto>(strSql.ToString(), new {Id = id}).FirstOrDefault();
+        }
+
+        public BaseUsersDto GetDto(string loginId)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append(@"SELECT a.*,b.RoleId FROM dbo.BaseUsers a LEFT JOIN dbo.BaseUserRoleMap b ON a.id=b.UserId
+WHERE a.loginId=@LoginId");
+            return _usersRepository.Query<BaseUsersDto>(strSql.ToString(), new { LoginId = loginId }).FirstOrDefault();
         }
     }
 

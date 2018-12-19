@@ -10,3 +10,13 @@ export const getMenuList=()=>{
       })
 }
 
+export const getBaseMenu=()=>{
+    return axios.request({
+        url: 'api/menu/GetBaseMenu',
+        // params: {
+        //   user_id
+        // },
+        method: 'get'
+      })
+}
+

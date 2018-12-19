@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 using System;
-using Comba.Base.Data;
+using YF.Base.Data;
 namespace App.Models
 {	
     	

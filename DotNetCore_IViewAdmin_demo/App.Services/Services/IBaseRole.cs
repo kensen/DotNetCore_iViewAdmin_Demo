@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Comba.Base.Data;
+using YF.Base.Data;
 using App.Services.Dto;
 
 namespace App.Services
@@ -21,6 +21,8 @@ namespace App.Services
         bool Add(BaseRoleDto dto);
 
         bool Update(BaseRoleDto dto);
+
+        BaseRoleDto GetDto(int id);
 
         bool Delete(int id);
 

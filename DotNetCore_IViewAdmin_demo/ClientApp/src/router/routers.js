@@ -59,54 +59,113 @@ export default [
     }
   },
   {
-    path: '/multilevel',
-    name: 'multilevel',
-    meta: {
-      icon: 'md-menu',
-      title: '多级菜单'
+    path: '/sysmanager',
+    name: 'sysmanager',
+    meta:{
+      icon:'md-menu',
+      title:"系统管理"
+    },
+    component:Main,
+    children:[
+      {
+        path: 'usermanager',
+        name: 'usermanager',
+        meta: {
+          icon: 'md-funnel',
+          title: '用户管理'
+        },
+        component: () => import('@/view/sysmanager/usermanager.vue'),
+      },
+      {
+        path: 'rolemanager',
+        name: 'rolemanager',
+        meta: {
+          icon: 'md-funnel',
+          title: '角色管理'
+        },
+        component: () => import('@/view/sysmanager/rolemanager.vue')
+      }
+    ]
+  },
+  //配置第三级功能路由，隐藏第三级菜单，通过第二级页面上的按钮触发路由（由于不能跟上面第二级路由共享，只能另外开一个路由）
+  {
+    path: '/sysmanager',
+    name: 'sysmanager',
+    meta: {     
+      icon:'md-menu',
+      title:"系统管理"
     },
     component: Main,
     children: [
       {
-        path: 'level_2_1',
-        name: 'level_2_1',
+        path: 'usermanager',
+        name: 'usermanager',
         meta: {
           icon: 'md-funnel',
-          title: '二级-1'
-        },
-        component: () => import('@/view/multilevel/level-2-1.vue')
-      },
-      {
-        path: 'level_2_2',
-        name: 'level_2_2',
-        meta: {
-          access: ['super_admin'],
-          icon: 'md-funnel',
-          showAlways: true,
-          title: '二级-2'
+          title: '用户管理'
         },
         component: parentView,
-        children: [
+        children:[
           {
-            path: 'level_2_2_1',
-            name: 'level_2_2_1',
+            path: 'useradd',
+            name: 'useradd',
             meta: {
-              icon: 'md-funnel',
-              title: '三级'
+              icon: 'md-flower',
+              title: '新增用户',
+              notCache: true,
+              beforeCloseName: 'before_close_normal'
             },
-            component: () => import('@/view/multilevel/level-2-2/level-3-1.vue')
+            component: () => import('@/view/sysmanager/useradd.vue')
+          },
+          {
+            path: 'userupdate/:id',
+            name: 'userupdate',
+            meta: {
+              icon: 'md-flower',             
+              title: route => `用户修改-${route.params.id}`,
+              notCache: true,
+              beforeCloseName: 'before_close_normal'
+            },
+            component: () => import('@/view/sysmanager/userupdate.vue')
           }
         ]
       },
       {
-        path: 'level_2_3',
-        name: 'level_2_3',
+        path: 'rolemanager',
+        name: 'rolemanager',
         meta: {
           icon: 'md-funnel',
-          title: '二级-3'
+          title: '角色管理'
         },
-        component: () => import('@/view/multilevel/level-2-3.vue')
+        component: parentView,
+        children:[
+          {
+            path: 'roleadd',
+            name: 'roleadd',
+            meta: {
+              icon: 'md-flower',
+              title: '新增角色',
+              notCache: true,
+              beforeCloseName: 'before_close_normal'
+            },
+            component: () => import('@/view/sysmanager/roleadd.vue')
+          },
+          {
+            path: 'roleupdate/:id',
+            name: 'roleupdate',
+            meta: {
+              icon: 'md-flower',             
+              title: route => `角色修改-${route.params.id}`,
+              notCache: true,
+              beforeCloseName: 'before_close_normal'
+            },
+            component: () => import('@/view/sysmanager/roleupdate.vue')
+          }
+        ]
       }
+
+      
+     
     ]
   },
   {

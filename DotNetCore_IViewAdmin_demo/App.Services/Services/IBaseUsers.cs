@@ -11,16 +11,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Comba.Base.Data;
+using YF.Base.Data;
 using App.Services.Dto;
+using YF.Utility.Message;
 
 namespace App.Services
 {	
     	public interface IBaseUsers
     {
-        bool Add(BaseUsersDto dto);
+        OperationResult<bool> Add(BaseUsersDto dto);
 
-        bool Update(BaseUsersDto dto);
+        OperationResult<bool> Update(BaseUsersDto dto);
+
+        BaseUsersDto GetDto(int id);
+
+        BaseUsersDto GetDto(string loginId);
 
         bool Delete(int id);
 

@@ -13,7 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.Configuration;
-using Comba.Base.Data;
+using YF.Base.Data;
 using App.Models;
 using App.Repositories;
 using App.Services.Dto;
@@ -86,6 +86,13 @@ namespace App.Services
         public List<BaseRoleDto> GetPageList(string sql, SortCondition sort, int intPageSize, int intCurrentIndex, out int total)
         {
             throw new NotImplementedException();
+        }
+
+        public BaseRoleDto GetDto(int id)
+        {
+            var BaseRoleDto = Mapper.Map<BaseRole, BaseRoleDto>(repository.GetById(id));
+            return BaseRoleDto;
+           
         }
     }
 

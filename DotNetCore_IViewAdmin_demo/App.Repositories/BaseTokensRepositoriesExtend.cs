@@ -12,9 +12,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Dapper;
-using Comba.Base;
-using Comba.Base.Data;
-using Comba.Utility.Extensions;
+using YF.Base;
+using YF.Base.Data;
+using YF.Utility.Extensions;
 using App.Models;
 
 namespace App.Repositories
